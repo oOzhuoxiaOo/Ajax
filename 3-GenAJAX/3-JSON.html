@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #result {
+            width: 200px;
+            height: 100px;
+            border: solid 1px #89b;
+        }
+    </style>
+</head>
+<body>
+    <div id="result"></div>
+
+    <script>
+        // 绑定键盘按下事件
+        const result = document.querySelector('#result')
+        window.addEventListener('keydown',function(){
+            // 创建 XMLHttpRequest 对象
+            const xhr = new XMLHttpRequest();
+            // 📕设置响应体数据的类型(自动转换数据格式)
+            // 例如：str->obj
+            // response 是通过将接收到的数据内容解析为 JSON 而创建的 JavaScript 对象。
+            xhr.responseType = 'json';
+            // 打开连接
+            xhr.open('GET','http://127.0.0.1:8000/json-server');
+            // 发送请求
+            xhr.send();
+            // 事件绑定
+            xhr.onreadystatechange = function(){
+                if(xhr.readyState === 4) {
+                    if(xhr.status >= 200 && xhr.status < 300) {
+                        //
+                        console.log(xhr.response);
+                        // result.innerHTML = xhr.response;
+                        //📕手动转化数据格式
+                        // 从服务器端接收数据一般都是字符串 将字符串转化为对象
+                        // JSON.parse() 方法用来解析 JSON 字符串，
+                        // 字符串：{"name":"xiana","like":"boluobao"}
+                        // 对象：{name: 'xiana', like: 'boluobao'}
+                        // let data = JSON.parse(xhr.response);
+                        // console.log(data);
+                        // result.innerHTML = data.name;
+                        result.innerHTML = xhr.response.name;
+                    }
+                }
+            }
+        })
+    </script>
+</body>
+</html>

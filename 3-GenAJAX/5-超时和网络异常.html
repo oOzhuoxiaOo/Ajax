@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>请求超时和网络异常</title>
+    <style>
+        #result {
+            width: 200px;
+            height: 100px;
+            border: solid #90b;
+        }
+    </style>
+</head>
+<body>
+    <button>点击发送请求</button>
+    <div id="result"></div>
+
+    <script>
+        // 获取点击按钮 和 内容区域
+        const btn = document.querySelector('button');
+        const result = document.querySelector('#result');
+        // 添加点击事件
+        btn.addEventListener('click',function(){
+            // 1.获取XMLHttpRequest 对象
+            const xhr = new XMLHttpRequest();
+               // 🔖超时设置 2s设置
+               xhr.timeout = 2000;
+            //    🔖超时回调
+            xhr.ontimeout = function(){
+                alert('网络超时2s,请从新访问');
+            }
+            // 🔖网络异常回调
+            xhr.onerror = function() {
+                alert('网络异常,出问题了');
+            }
+               //🔖将获取的字符串格式 转化为对象 
+               xhr.responseType = 'json';
+            // 2.打开连接
+            xhr.open('GET','http://127.0.0.1:8000/delay');
+            // 3.发送连接
+            xhr.send();
+            // 4.绑定接收事件
+            xhr.onreadystatechange = function(){
+                // 🔖准备状态判断
+                if(xhr.readyState === 4) {
+                    console.log('准备状态判断成功');
+                    // 状态码判断
+                    if(xhr.status >= 200 && xhr.status < 300) {
+                        console.log('状态码判断成功')
+                        // 内容
+                        console.log('检测response内容');
+                        console.log(xhr.response);
+                        result.innerHTML = xhr.response.name;
+                        
+                    }
+                }
+            }
+
+        })
+        
+    </script>
+</body>
+</html>
